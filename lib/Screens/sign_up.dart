@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newinstagram/Resources/auth_method.dart';
+import 'package:newinstagram/Screens/login_screen.dart';
 import 'package:newinstagram/Utils/colors.dart';
 import 'package:newinstagram/Utils/utils.dart';
 import 'package:newinstagram/Widget/text_field_input.dart';
@@ -59,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           radius: 50,
                           backgroundImage: MemoryImage(_image!),
                         )
-                      : CircleAvatar(
+                      :const CircleAvatar(
                           radius: 50,
                           backgroundImage: NetworkImage(
                               "http://www.shadowsphotography.co/wp-content/uploads/2017/12/photography-01-800x400.jpg"),
@@ -72,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           icon: Icon(Icons.add_a_photo)))
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
               CustomTextFieldInput(
@@ -115,11 +116,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 }),
                 child: Container(
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(
+                  padding:const EdgeInsets.symmetric(
                     vertical: 12,
                   ),
-                  decoration: BoxDecoration(color: Colors.blue),
-                  child: Text(
+                  decoration:const BoxDecoration(color: Colors.blue),
+                  child:const Text(
                     "Login",
                     textAlign: TextAlign.center,
                   ),
@@ -130,15 +131,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text("Have not an Account?"),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child:const Text("Have not an Account?"),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: ((context) =>LoginScreen() )));
+                    },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      child: Text(
-                        "Sign Up",
+                      padding:const EdgeInsets.symmetric(vertical: 8),
+                      child: const Text(
+                        "Log in",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
