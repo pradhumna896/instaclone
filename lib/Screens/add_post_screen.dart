@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:newinstagram/Resources/firestore_methode.dart';
 import 'package:newinstagram/Utils/colors.dart';
 import 'package:newinstagram/Utils/utils.dart';
 import 'package:newinstagram/models/user.dart';
@@ -20,28 +21,42 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
   TextEditingController _descriptionController = TextEditingController();
 
+  bool isLoading = false;
 
-void postImage(
-  String uid,
-  String username,
-  String profImage,
+  void clearImage(){
+    setState(() {
+      _file=null;
+    });
+  } 
 
-){
-  try{
+  void postImage(
+    String uid,
+    String username,
+    String profImage,
+  ) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      String res = await FirestoreMethods().uploadPost(
+          _descriptionController.text, _file!, uid, username, profImage);
 
-  }catch(e) {
-    
+      if (res == 'success') {
+        setState(() {
+          isLoading = false;
+        });
+        showSnackBar('posted', context);
+        clearImage();
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        showSnackBar(res, context);
+      }
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
   }
-
-
-
-}
-
-
-
-
-
-
 
   _selectImage(BuildContext context) async {
     return showDialog(
@@ -72,12 +87,11 @@ void postImage(
                   });
                 }),
               ),
-               SimpleDialogOption(
+              SimpleDialogOption(
                 padding: const EdgeInsets.all(20),
                 child: const Text("Cancel"),
                 onPressed: (() async {
                   Navigator.pop(context);
-                 
                 }),
               )
             ],
@@ -85,16 +99,13 @@ void postImage(
         });
   }
 
-
-@override
-void dispose() {
+  @override
+  void dispose() {
     // TODO: implement dispose
     super.dispose();
     _descriptionController.dispose();
   }
 
-
-  
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
@@ -114,10 +125,13 @@ void dispose() {
               centerTitle: false,
               elevation: 0,
               leading: IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+                  onPressed:clearImage,
+                   icon: const Icon(Icons.arrow_back)),
               actions: [
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      postImage(user.uid, user.username, user.photoUrl);
+                    },
                     child: const Text(
                       "Post",
                       style: TextStyle(
@@ -129,11 +143,15 @@ void dispose() {
             ),
             body: Column(
               children: [
+                isLoading
+                    ? const LinearProgressIndicator()
+                    : const Padding(padding: EdgeInsets.only(top: 0)),
+                const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     CircleAvatar(
+                    CircleAvatar(
                       backgroundImage: NetworkImage(user.photoUrl),
                     ),
                     SizedBox(

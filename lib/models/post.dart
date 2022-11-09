@@ -3,30 +3,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Post{
   final String description;
   final String uid;
-  final String photoUrl;
   final String username;
-  final String bio;
-  final List postUrl;
-  final List ;
+  final String postId;
+  final String profImage;
+  final datePublished;
+  final String postUrl;
+  final List likes;
 
   Post({
-    required this.email,
+    required this.profImage,
+    required this.description,
     required this.uid,
-    required this.photoUrl,
     required this.username,
-    required this.bio,
-    required this.followers,
-    required this.following
+    required this.postId,
+    required this.datePublished,
+    required this.postUrl,
+    required this.likes
   });
 
   Map<String, dynamic> toJson()=>{
-    'username':username,
+    'description':username,
     'uid':uid,
-    'email':email,
-    'photoUrl':photoUrl,
-    'bio':bio,
-    'followers':followers,
-    'following':following
+    'username':username,
+    'postId':postId,
+    'profImage':profImage,
+    'datePublished':datePublished,
+    'postUrl':postUrl,
+    'likes':likes
   };
 
 
@@ -34,13 +37,15 @@ class Post{
     var snapshot = snap.data() as Map<String , dynamic>;
 
     return Post(
-      email: snapshot['email'],
+      description: snapshot['description'],
        uid: snapshot['uid'], 
-       photoUrl: snapshot['photoUrl'],
+       postId: snapshot['postId'],
         username: snapshot['username'],
-         bio: snapshot['bio'],
-          followers: snapshot['followers'],
-           following: snapshot['following']);
+         datePublished: snapshot['datePublished'],
+          postUrl: snapshot['postUrl'],
+           likes: snapshot['likes'],
+           profImage: snapshot['profImage']
+           );
 
   }
 
