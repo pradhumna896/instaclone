@@ -19,6 +19,30 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
   TextEditingController _descriptionController = TextEditingController();
+
+
+void postImage(
+  String uid,
+  String username,
+  String profImage,
+
+){
+  try{
+
+  }catch(e) {
+    
+  }
+
+
+
+}
+
+
+
+
+
+
+
   _selectImage(BuildContext context) async {
     return showDialog(
         context: context,
@@ -61,6 +85,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
         });
   }
 
+
+@override
+void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _descriptionController.dispose();
+  }
+
+
+  
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
@@ -99,9 +133,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?cs=srgb&dl=pexels-anjana-c-674010.jpg&fm=jpg"),
+                     CircleAvatar(
+                      backgroundImage: NetworkImage(user.photoUrl),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.height * 0.35,
