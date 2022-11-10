@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,13 +27,56 @@ class FirestoreMethods {
           postUrl: photoUrl,
           likes: []);
 
-      _firestore.collection('posts')
-      .doc(postId)
-      .set(post.toJson());
+      _firestore.collection('posts').doc(postId).set(post.toJson());
       res = 'success';
     } catch (e) {
-      res =e.toString();
+      res = e.toString();
     }
     return res;
+  }
+
+  Future<void> likePost(String postId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayUnion([uid])
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<String> postComment(String postId, String text, String uid,
+      String name, String profilePic) async {
+    try {
+      if (text.isNotEmpty) {
+        String commentsId =const Uuid().v1();
+        await _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentsId)
+            .set({
+              'profilePic':profilePic,
+              'name':name,
+              'uid':uid,
+              'text':text,
+              'commentId':commentsId,
+              'datePublished':DateTime.now(),
+
+
+            });
+      }else{
+        print("text is Empty");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return e.toString();
   }
 }
