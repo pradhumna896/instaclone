@@ -1,23 +1,61 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:newinstagram/Utils/colors.dart';
+import 'package:newinstagram/Utils/utils.dart';
 import 'package:newinstagram/Widget/follow_button.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String uid;
+  const ProfileScreen({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  var userData = {};
+  var postLen = 0;
+  int followers = 0;
+  int following=0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uid)
+          .get();
+
+      var postSnap = await FirebaseFirestore.instance
+      .collection('users')
+      .where('uid',isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();    
+       postLen = postSnap.docs.length;
+      userData = userSnap.data()!; 
+      followers = userSnap.data()!['followers'].length;
+      following = userSnap.data()!['following'].length; 
+
+      setState(() {
+        
+      }); 
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
-        title: Text("username"),
+        title: Text(userData['username']),
         centerTitle: false,
       ),
       body: ListView(
@@ -28,11 +66,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Row(
                   children: [
-                    const CircleAvatar(
+                     CircleAvatar(
                       radius: 40,
                       backgroundColor: Colors.grey,
                       backgroundImage: NetworkImage(
-                          "https://h5p.org/sites/default/files/h5p/content/1209180/images/file-6113d5f8845dc.jpeg"),
+                          userData['photoUrl']),
                     ),
                     Expanded(
                       flex: 1,
@@ -42,9 +80,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              buildStateColumn(100, 'Post'),
-                              buildStateColumn(1, 'Followers'),
-                              buildStateColumn(2, 'Following'),
+                              buildStateColumn(postLen, 'Post'),
+                              buildStateColumn(followers, 'Followers'),
+                              buildStateColumn(following, 'Following'),
                             ],
                           ),
                           Row(
@@ -65,15 +103,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
-                  padding:const EdgeInsets.only(top: 15),
-                  child: const Text("username",style:
-                   TextStyle(fontWeight: FontWeight.bold),),
+                  padding: const EdgeInsets.only(top: 15),
+                  child:  Text(
+                    userData['username'],
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
-                  padding:const  EdgeInsets.only(top: 1),
-                  child: const Text("some descripton",style:
-                   TextStyle(fontWeight: FontWeight.bold),),
+                  padding: const EdgeInsets.only(top: 1),
+                  child: Text(
+                    userData['bio'],
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 )
               ],
             ),
