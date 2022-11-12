@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:newinstagram/Resources/auth_method.dart';
 import 'package:newinstagram/Resources/firestore_methode.dart';
+import 'package:newinstagram/Screens/login_screen.dart';
 import 'package:newinstagram/Utils/colors.dart';
 import 'package:newinstagram/Utils/utils.dart';
 import 'package:newinstagram/Widget/follow_button.dart';
@@ -105,12 +107,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     FirebaseAuth.instance.currentUser!.uid ==
                                             widget.uid
                                         ? FollowButton(
-                                            text: "Edit Profile",
+                                            text: "Sign Out",
                                             backgroundColor:
                                                 mobileBackgroundColor,
                                             borderColor: Colors.grey,
                                             textColor: primaryColor,
-                                            function: () {})
+                                            function: () async {
+                                              await AuthMethods().signOut();
+                                              // ignore: use_build_context_synchronously
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                          builder: (_) =>
+                                                             const LoginScreen()));
+                                            })
                                         : isFollowing
                                             ? FollowButton(
                                                 text: "Unfollow",
@@ -123,10 +133,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           FirebaseAuth.instance
                                                               .currentUser!.uid,
                                                           userData['uid']);
-                                                           setState(() {
-                                                     isFollowing=false;
-                                                     followers--;
-                                                   });  
+                                                  setState(() {
+                                                    isFollowing = false;
+                                                    followers--;
+                                                  });
                                                 })
                                             : FollowButton(
                                                 text: "follow",
@@ -140,10 +150,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                               .currentUser!.uid,
                                                           userData['uid']);
 
-                                                   setState(() {
-                                                     isFollowing=true;
-                                                     followers++;
-                                                   });       
+                                                  setState(() {
+                                                    isFollowing = true;
+                                                    followers++;
+                                                  });
                                                 }),
                                   ],
                                 )
