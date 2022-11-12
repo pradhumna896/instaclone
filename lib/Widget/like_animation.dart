@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 
 class LikeAnimation extends StatefulWidget {
   final Widget child;
@@ -26,7 +25,7 @@ class _LikeAnimationState extends State<LikeAnimation>with SingleTickerProviderS
   late Animation<double> scale; 
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     controller = AnimationController(vsync: this, duration: Duration(
       milliseconds:widget.duration.inMilliseconds ~/2 ));
@@ -52,7 +51,7 @@ class _LikeAnimationState extends State<LikeAnimation>with SingleTickerProviderS
   }
   @override
   void dispose() {
-    // TODO: implement dispose
+    
     super.dispose();
     controller.dispose();
   }

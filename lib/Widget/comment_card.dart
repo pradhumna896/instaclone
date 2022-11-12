@@ -1,9 +1,7 @@
-import 'dart:ui';
+
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:intl/intl.dart';
 
 class CommentCard extends StatefulWidget {
@@ -36,15 +34,15 @@ class _CommentCardState extends State<CommentCard> {
               children: [
                 RichText(text: TextSpan(
                   children: [
-                    TextSpan(text: widget.snap['name'],style: TextStyle(
+                    TextSpan(text: widget.snap['name'],style: const TextStyle(
                       fontWeight: FontWeight.bold)),
-                    TextSpan(text: " ${widget.snap['text']}",style: TextStyle(
+                    TextSpan(text: " ${widget.snap['text']}",style: const TextStyle(
                       fontWeight: FontWeight.bold))  
                   ]
                 )),
-                Padding(padding: EdgeInsets.only(top: 4),
+                Padding(padding: const EdgeInsets.only(top: 4),
                 child: Text(DateFormat.yMMMd().format(widget.snap['datePublished'].toDate()),
-                style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400),
+                style: const TextStyle(fontSize: 12,fontWeight: FontWeight.w400),
                 ),
                 )
               ],

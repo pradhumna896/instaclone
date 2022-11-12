@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:newinstagram/Resources/firestore_methode.dart';
 import 'package:newinstagram/Utils/colors.dart';
 import 'package:newinstagram/Utils/utils.dart';
@@ -27,7 +24,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
   }
@@ -43,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .get();
 
       var postSnap = await FirebaseFirestore.instance
-          .collection('users')
+          .collection('posts')
           .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
       postLen = postSnap.docs.length;
@@ -133,8 +129,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 backgroundColor: Colors.blue,
                                                 borderColor: Colors.grey,
                                                 textColor: Colors.white,
-                                                function: ()async {
-                                                   await FirestoreMethods()
+                                                function: () async {
+                                                  await FirestoreMethods()
                                                       .followUser(
                                                           FirebaseAuth.instance
                                                               .currentUser!.uid,
@@ -182,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           shrinkWrap: true,
                           itemCount: (snapshot.data! as dynamic).docs.length,
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 3,
                                   crossAxisSpacing: 5,
                                   mainAxisSpacing: 1.5,
